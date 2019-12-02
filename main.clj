@@ -2,14 +2,10 @@
 (require '[clojure.java.io :as io]
          '[clojure.string :as str])
 
-(defn read-file [path]
-  (with-open [f (io/reader path)]
-  (doall (line-seq f))))
-
 (defn catch-fire [c i o] (assoc (assoc c 1 i) 2 o))
 
-(defn split [s]
-  (vec (map read-string (str/split (first s) #","))))
+(defn read-split [s]
+  (vec (map read-string (str/split (slurp s) #","))))
 
 (defn execute [s c]
   (let [n1 (nth c (nth s 1))
@@ -28,7 +24,7 @@
           (recur (inc i) (execute s n)))))))
 
 (defn find-pairs [p]
-  (let [c (split (read-file p))]
+  (let [c (read-split p)]
     (loop [n 0 v 0 i 0]
       (if (= n 100)
         (println "Exceeded!")
