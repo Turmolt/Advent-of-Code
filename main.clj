@@ -25,8 +25,7 @@
       (let [s (subvec n (* i 4) (+ 4 (* i 4)))]
         (if (= 99 (first s))
           n
-          (recur (inc i) (execute s n))))))
-  )
+          (recur (inc i) (execute s n)))))))
 
 (defn find-pairs [p]
   (let [c (split (read-file p))]
