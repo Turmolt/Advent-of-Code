@@ -1,4 +1,4 @@
-(ns main)
+(ns adventofcode.day2)
 (require '[clojure.java.io :as io]
          '[clojure.string :as str])
 
@@ -33,6 +33,4 @@
             (println (str "n: " n " v: " v " r: " (first a)))
             (recur (int (/ i 99)) (mod i 100) (inc i))))))))
 
-(defn -main
-  [& args]
-  (find-pairs "input.txt"))
+(find-pairs "day 2/input.txt")
