@@ -20,9 +20,9 @@
   )
 
 (defn create-line [ins]
-  (loop [s [[[0 0]]]
+  (loop [s [[[0 0] [0 0]]]
          i 0]
-    (if (> (count ins) i)
+    (if (<= (count ins) i)
       s
       (recur (concat s [[(last (last s))(create-segment (last (last s)) (nth ins i))]]) (inc i))
       )))
@@ -38,15 +38,18 @@
         ta2 (- (* (- x22 x21) (- y11 y12)) (* (- x11 x12) (- y22 y21)))
         tb1 (+ (* (- y11 y12) (- x11 x21)) (* (- x12 x11) (- y11 y21)))
         tb2  (- (* (- x22 x21) (- y11 y12)) (* (- x11 x12) (- y22 y21)))]
+    (println (str p11 p12 p21 p22 ta1 " " ta2 " " tb1 " " tb2))
     (if (or (= ta2 0) (= tb2 0))
-      1000000000
+      1000000
       (let [ta (/ ta1 ta2)
             tb (/ tb1 tb2)]
         (if (and (between ta 0 1) (between tb 0 1))
           (do
-            (println (str "x: " (+ x11 (* ta (- x12 x11))) "  y: " (+ y11 (* ta (- y12 y11)))))
+            (println ta)
             (+ (abs (+ x11 (* ta (- x12 x11)))) (abs (+ y11 (* ta (- y12 y11))))))
-          1000000000)))
+          (do
+            (println "no")
+            1000000))))
     ))
 
 (defn create-and-intersect [i]
@@ -55,13 +58,11 @@
     (loop [closest 1000000
            idx 0]
       (if (and (< idx (count l1)) (< idx (count l2)))
-        (let [l1s (nth l1 idx) l2s (nth l2 idx)
-              dis (intersects l1s l2s)]
-          (if (> closest dis)
-            (do
-              (println dis)
-              (recur dis (inc idx)))
-            (recur closest (inc idx))))
+        (let [l1s (nth l1 idx) l2s (nth l2 idx)]
+          (let [dis (intersects l1s l2s)]
+            (if (and (> closest dis) (not (= dis nil)))
+              (recur dis (inc idx))
+              (recur closest (inc idx)))))
         (println closest)))))
 
 (create-and-intersect (read-and-split "day 3/input.txt"))
