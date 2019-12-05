@@ -18,3 +18,5 @@
 
 (solve (map read-string (u/input-lsv 1)))
 
+
+(println (u/input-lsv 1))

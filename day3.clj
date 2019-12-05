@@ -21,7 +21,7 @@
 
 (def wire (partial transduce (map instruction) (completing create-line)))
 
-(let [wires (map #(rest (wire '((0 0)) %)) (u/input-lcsv 3))
+(let [wires (map #(rest (wire '((0 0)) %)) (vec (u/input-csv 3)))
       intersections (apply clojure.set/intersection (map set wires))]
   (println (apply min-key distance intersections))
   (println (+ (count wires)

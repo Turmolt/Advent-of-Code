@@ -1,6 +1,5 @@
 (ns adventofcode.day2
-  (:require [clojure.java.io :as io]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [adventofcode.util :as u]))
 
 (defn catch-fire [c i o] (assoc (assoc c 1 i) 2 o))
