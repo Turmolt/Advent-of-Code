@@ -1,11 +1,9 @@
 (ns adventofcode.day3
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [adventofcode.util :as u]))
 
 (defn abs [n] (max n (- n)))
 (defn distance [[x y]] (+ (abs x) (abs y)))
-
-(def input
-  (map #(str/split % #",") (str/split (slurp "day 3/input.txt") #"\n")))
 
 (defn movement [d]
   (case d
@@ -23,7 +21,7 @@
 
 (def wire (partial transduce (map instruction) (completing create-line)))
 
-(let [wires (map #(rest (wire '((0 0)) %)) input)
+(let [wires (map #(rest (wire '((0 0)) %)) (u/input-lcsv 3))
       intersections (apply clojure.set/intersection (map set wires))]
   (println (apply min-key distance intersections))
   (println (+ (count wires)

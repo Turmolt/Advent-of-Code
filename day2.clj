@@ -1,11 +1,9 @@
-(ns adventofcode.day2)
-(require '[clojure.java.io :as io]
-         '[clojure.string :as str])
+(ns adventofcode.day2
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]
+            [adventofcode.util :as u]))
 
 (defn catch-fire [c i o] (assoc (assoc c 1 i) 2 o))
-
-(defn read-split [s]
-  (vec (map read-string (str/split (slurp s) #","))))
 
 (defn execute [s c]
   (let [n1 (nth c (nth s 1))
@@ -24,7 +22,7 @@
           (recur (inc i) (execute s n)))))))
 
 (defn find-pairs [p]
-  (let [c (read-split p)]
+  (let [c p]
     (loop [n 0 v 0 i 0]
       (if (= n 100)
         (println "Exceeded!")
@@ -33,4 +31,4 @@
             (println (str "n: " n " v: " v " r: " (first a)))
             (recur (int (/ i 99)) (mod i 100) (inc i))))))))
 
-(find-pairs "day 2/input.txt")
+(find-pairs (u/input-csv 2))
