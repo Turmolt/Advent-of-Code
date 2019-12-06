@@ -35,7 +35,7 @@
       4 (do
           (println (str "Output: " (nth c n1)))
           [ni c])
-      5 (if (not (zero? n1)) [n2 c] [ni c])
+      5 (if-not (zero? n1) [n2 c] [ni c])
       6 (if (zero? n1) [n2 c] [ni c])
       7 [ni (assoc c n3 (if (< n1 n2) 1 0))]
       8 [ni (assoc c n3 (if (= n1 n2) 1 0))])))
