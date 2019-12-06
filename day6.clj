@@ -5,16 +5,16 @@
 (def input (into {} (map (comp vec reverse) (map #(str/split % #"\)") (u/input-lsv 6)))))
 
 (defn build-chain [d k i]
-  (loop [o (if (= i \I) 0 []) key k]
+  (loop [o (if i 0 []) key k]
     (if (contains? d key)
-      (recur (if (= i \I) (inc o) (conj o (d key))) (d key))
+      (recur (if i (inc o) (conj o (d key))) (d key))
       o)))
 
 (defn part-one []
-  (reduce + (map (partial #(build-chain input % \I)) (keys input))))
+  (reduce + (map (partial #(build-chain input % true)) (keys input))))
 
-(defn part-two []  (let [y (build-chain input "YOU" \C)
-                         s (build-chain input "SAN" \C)
+(defn part-two []  (let [y (build-chain input "YOU" false)
+                         s (build-chain input "SAN" false)
                          i (clojure.set/intersection (set y) (set s))]
                      (apply min (map #(+ (.indexOf y %) (.indexOf s %)) i))))
 
