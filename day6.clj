@@ -11,17 +11,23 @@
       o)))
 
 (defn part-one []
-  (reduce + (map (partial #(build-chain input % true)) (keys input))))
+  (->> (keys input)
+       (map (partial #(build-chain input % true)))
+       (reduce +)))
 
-(defn part-two []  (let [y (build-chain input "YOU" false)
-                         s (build-chain input "SAN" false)
-                         i (clojure.set/intersection (set y) (set s))]
-                     (apply min (map #(+ (.indexOf y %) (.indexOf s %)) i))))
+(defn part-two []  
+  (let [y (build-chain input "YOU" false)
+        s (build-chain input "SAN" false)
+        i (clojure.set/intersection (set y) (set s))]
+    (->> i
+         (map #(+ (.indexOf y %) (.indexOf s %)))
+         (apply min))
+    ))
 
 (time (part-one))
 ;; => 200001
-;; => "Elapsed time: 61.6544 msecs"
+;; => "Elapsed time: 64.2113 msecs"
 
 (time (part-two))
 ;; => 379
-;; => "Elapsed time: 5.5923 msecs"
+;; => "Elapsed time: 3.5618 msecs"
