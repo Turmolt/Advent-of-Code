@@ -9,36 +9,51 @@
   {1 4
    2 4
    3 2
-   4 2})
+   4 2
+   5 3
+   6 3
+   7 4
+   8 4})
+
+(defn jumpif [c i n c] (if c [n c] [i c]))
 
 (defn value [c o n d]
-  (case d
-    true (case o
-           0 (nth c n)
-           1 n)
-    false n)
-  )
+  ;(do (println (str o " and " d)))
+  (if d (case o
+          0  (nth c n) ;(do (println (str (nth c n) "\n" c)))
+          1 n)
+      n))
 
-(defn execute [s c m]
+(defn execute [s c m i]
+  (println s)
   (let [o (opcode (first s))
         d (steps (last o))
+        ni (+ i d)
         n1 (value c (nth o 2) (nth s 1) (= d 4))
-        n2 (value c (nth o 1) (nth s 2) (= d 4))
-        n3 (nth s 3)]
-    (case (last o)
-      1 (assoc c n3 (+ n1 n2))
-      2 (assoc c n3 (* n1 n2))
-      3 (assoc c n1 m)
-      4 (do
-          (println (str "Output: " (nth c n1)))
-          c))))
+        n2 (if (<= 3 (count s)) (value c (nth o 1) (nth s 2) (= d 4)) nil)
+        n3 (if (<= 4 (count s)) (value c (nth o 0) (nth s 3) (some (partial = (last o)) [5 6 7 8])) nil)]
+    (do (println (str n1 " : " n2 " : " n3))
+        (case (last o)
+          1 [ni (assoc c n3 (+ n1 n2))]
+          2 [ni (assoc c n3 (* n1 n2))]
+          3 [ni (assoc c n1 m)]
+          4 (do
+              (println (str "Output: " (nth c n1)))
+              [ni c])
+          5 (if (not (zero? n1)) [n2 c] [ni c])
+          6 (if (zero? n1) [n2 c] [ni c])
+          7 [ni (assoc c n3 (if (< n1 n2) 1 0))]
+          8 [ni (assoc c n3 (if (= n1 n2) 1 0))]))))
 
 (defn solve [c m]
   (loop [i 0 n c]
     (if (= 99 (nth n i))
       (println (str "Halt!"))
-      (if (>= (+ 4 i) (count n)) (println n)
-          (let [s (subvec n i (+ 4 i))]
-            (recur (+ i (steps (last (opcode (first s))))) (execute s n m)))))))
+      (let [op (opcode (nth n i))
+            step (steps (last op))]
+        (if (>= (+ step i) (count n)) (println n)
+            (let [s (subvec n i (+ step i))
+                  o (execute s n m i)]
+              (recur (first o) (second o))))))))
 
-(time (solve (u/input-csv 5) 1))
+(time (solve (u/input-csv 0) 0))
