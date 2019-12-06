@@ -25,8 +25,8 @@
   (let [o (opcode (first s))
         d (steps (last o))
         ni (+ i d)
-        n1 (value c (nth o 2) (nth s 1) (or (= d 3) (= d 4)))
-        n2 (if (<= 3 (count s)) (value c (nth o 1) (nth s 2) (or (= d 3) (= d 4))) nil)
+        n1 (value c (nth o 2) (nth s 1) (>= d 3))
+        n2 (if (<= 3 (count s)) (value c (nth o 1) (nth s 2) (>= d 3)) nil)
         n3 (if (<= 4 (count s)) (value c (nth o 0) (nth s 3) (some (partial = (last o)) [5 6])) nil)]
     (case (last o)
       1 [ni (assoc c n3 (+ n1 n2))]
