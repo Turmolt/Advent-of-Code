@@ -13,12 +13,16 @@
    5 3
    6 3
    7 4
-   8 4})
+   8 4
+   9 1
+   0 1})
 
 (defn value [c o n d]
   (if d (case o
           0  (nth c n)
-          1 n)
+          1 n
+          (do (println "Break!")
+              -0.1))
       n))
 
 (defn execute [s c m i]
@@ -34,21 +38,24 @@
       3 [ni (assoc c n1 m)]
       4 (do
           (println (str "Output: " (nth c n1)))
-          [ni c])
+          [ni c (nth c n1)])
       5 (if-not (zero? n1) [n2 c] [ni c])
       6 (if (zero? n1) [n2 c] [ni c])
       7 [ni (assoc c n3 (if (< n1 n2) 1 0))]
-      8 [ni (assoc c n3 (if (= n1 n2) 1 0))])))
+      8 [ni (assoc c n3 (if (= n1 n2) 1 0))]
+      (do (println "Break!!")
+          [0 [99]]))))
 
 (defn solve [c m]
-  (loop [i 0 n c]
+  (loop [i 0 n c r 0]
     (if (= 99 (nth n i))
-      (println (str "Halt!"))
+      (do (println (str "Halt!"))
+          r)
       (let [op (opcode (nth n i))
             step (steps (last op))]
         (if (>= (+ step i) (count n)) (println n)
             (let [s (subvec n i (+ step i))
                   o (execute s n m i)]
-              (recur (first o) (second o))))))))
+              (recur (first o) (second o) (last o))))))))
 
 (time (solve (u/input-csv 5) 5))
