@@ -1,8 +1,6 @@
 (ns adventofcode.day7
   (:require [adventofcode.util :as u]
-            [adventofcode.day5 :as cpu]
-            [clojure.string :as str]
-            [clojure.set :as set]))
+            [adventofcode.day5 :as cpu]))
 
 (defn permutations [s]
   (lazy-seq 
@@ -47,8 +45,8 @@
 
 (time (part-one))
 ;; => 117312
-;; => "Elapsed time: 103.24639 msecs"
+;; => "Elapsed time: 97.507849 msecs"
 
 (time (part-two))
 ;; => 1336480
-;; => "Elapsed time: 222.768927 msecs"
+;; => "Elapsed time: 206.364227 msecs"
