@@ -19,8 +19,7 @@
   (if d (case o
           0  (nth c n)
           1 n
-          (do (println "Break!")
-              -0.1))
+          )
       n))
 
 (defn execute [s c m i]
@@ -34,21 +33,16 @@
       1 [ni (assoc c n3 (+ n1 n2))]
       2 [ni (assoc c n3 (* n1 n2))]
       3 [ni (assoc c n1 m)]
-      4 (do
-          (println (str "Output: " (nth c n1)))
-          [ni c (nth c n1)])
+      4 [ni c (nth c n1)]
       5 (if-not (zero? n1) [n2 c] [ni c])
       6 (if (zero? n1) [n2 c] [ni c])
       7 [ni (assoc c n3 (if (< n1 n2) 1 0))]
-      8 [ni (assoc c n3 (if (= n1 n2) 1 0))]
-      (do (println "Break!!")
-          [0 [99]]))))
+      8 [ni (assoc c n3 (if (= n1 n2) 1 0))])))
 
 (defn solve [c m si]
   (loop [i si n c r 0]
     (if (= 99 (nth n i))
-      (do (println (str "Halt!"))
-          r)
+      r
       (let [op (opcode (nth n i))
             step (steps (last op))]
         (if (>= (+ step i) (count n)) (println n)
@@ -61,8 +55,7 @@
       (if (number? r)
         [r n i]
         (if (= 99 (nth n i))
-          (do (println (str "Halt!!"))
-              nil)
+          nil
           (let [op (opcode (nth n i))
                 step (steps (last op))]
             (if (>= (+ step i) (count n)) (println n)

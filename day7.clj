@@ -48,8 +48,12 @@
 
 (defn part-one [] (apply max (map (comp first #(check-phase (u/input-csv 7) 0 %)) (vec (map vec (permutations [0 1 2 3 4]))))))
 
+(defn part-two [] (apply max (map (partial last) (map #(check-phase-recursively (u/input-csv 7) 0 %) (vec (map vec (permutations [9 8 7 6 5])))))))
+
 (time (part-one))
 ;; => 117312
-;; => "Elapsed time: 114.26 msecs"
+;; => "Elapsed time: 103.24639 msecs"
 
-(defn part-two [] (apply max (map (partial last) (map #(check-phase-recursively (u/input-csv 7) 0 %) (vec (map vec (permutations [9 8 7 6 5])))))))
+(time (part-two))
+;; => 1336480
+;; => "Elapsed time: 222.768927 msecs"
