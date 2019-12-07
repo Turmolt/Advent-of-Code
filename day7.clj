@@ -20,6 +20,10 @@
          (#(cpu/solve % m step)))))
 
 (defn check-phase [c m p]
-  (map #(+ 1 %) p))
+  (loop [i m n (first p) r (rest p)]
+    (if-not (empty? r)
+      (let [s (solve-phase c i n)]
+        (recur s (first r) (rest r)))
+      [i p])))
 
-(map #(check-phase (u/input-csv 7) 0 %) (vec (map vec (permutations [0 1 2 3 4]))))
+(apply max-key (map (fn [[x y]] ([(int x) y])) (map #(check-phase (u/input-csv 7) 0 %) (vec (map vec (permutations [0 1 2 3 4]))))))
