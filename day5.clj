@@ -34,7 +34,9 @@
       1 [ni (assoc c n3 (+ n1 n2))]
       2 [ni (assoc c n3 (* n1 n2))]
       3 [ni (assoc c n1 m)]
-      4 [ni c (nth c n1)]
+      4 (do
+          (println (str "Output: " (nth c n1)))
+          [ni c (nth c n1)])
       5 (if-not (zero? n1) [n2 c] [ni c])
       6 (if (zero? n1) [n2 c] [ni c])
       7 [ni (assoc c n3 (if (< n1 n2) 1 0))]
@@ -45,7 +47,8 @@
 (defn solve [c m si]
   (loop [i si n c r 0]
     (if (= 99 (nth n i))
-      r
+      (do (println (str "Halt!"))
+          r)
       (let [op (opcode (nth n i))
             step (steps (last op))]
         (if (>= (+ step i) (count n)) (println n)
