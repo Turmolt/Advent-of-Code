@@ -13,9 +13,7 @@
    5 3
    6 3
    7 4
-   8 4
-   9 1
-   0 1})
+   8 4})
 
 (defn value [c o n d]
   (if d (case o
@@ -46,8 +44,8 @@
       (do (println "Break!!")
           [0 [99]]))))
 
-(defn solve [c m]
-  (loop [i 0 n c r 0]
+(defn solve [c m si]
+  (loop [i si n c r 0]
     (if (= 99 (nth n i))
       (do (println (str "Halt!"))
           r)
@@ -56,6 +54,6 @@
         (if (>= (+ step i) (count n)) (println n)
             (let [s (subvec n i (+ step i))
                   o (execute s n m i)]
-              (recur (first o) (second o) (last o))))))))
+              (recur (first o) (second o) (peek o))))))))
 
-(time (solve (u/input-csv 5) 5))
+(time (solve (u/input-csv 5) 5 0))
