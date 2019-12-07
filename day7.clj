@@ -21,9 +21,13 @@
 
 (defn check-phase [c m p]
   (loop [i m n (first p) r (rest p)]
-    (if-not (empty? r)
+    (if-not (nil? n)
       (let [s (solve-phase c i n)]
         (recur s (first r) (rest r)))
       [i p])))
 
-(apply max-key (map (fn [[x y]] ([(int x) y])) (map #(check-phase (u/input-csv 7) 0 %) (vec (map vec (permutations [0 1 2 3 4]))))))
+(defn part-one [] (apply max (flatten (map #(check-phase (u/input-csv 7) 0 %) (vec (map vec (permutations [0 1 2 3 4])))))))
+
+(time (part-one))
+;; => 117312
+;; => "Elapsed time: 114.26 msecs"
