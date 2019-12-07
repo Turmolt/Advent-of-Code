@@ -19,32 +19,32 @@
          (second)
          (#(cpu/solve % m step)))))
 
+(defn solve-phase-interuptable [c m p]
+  (let [op (cpu/opcode (nth c 0))
+        step (cpu/steps (last op))
+        s (subvec c 0 step)]
+        (->> (cpu/execute s c p 0)
+             (second)
+             (#(cpu/solve-interuptable % m step)))))
+
 (defn check-phase [c m p]
-  (do
-    (println (str "C: " c " M: " m " P: " p ))
     (loop [i m n (first p) r (rest p)]
       (if-not (nil? n)
         (let [s (solve-phase c i n)]
-          (do
-            (println s)
-            (recur s (first r) (rest r))))
-        [i p]))))
+            (recur s (first r) (rest r)))
+        [i p])))
 
 (defn check-phase-recursively [c m p]
-  (do
-    (println (str "C: " c " M: " m " P: " p))
-    (loop [i m n (first p) r (rest p) t c]
-      (do (println (str "I: " i))
+    (loop [i m n (first p) r (rest p) mem (vec (take 5 (repeat [0 c]))) memind 0 coll []]
+          (if (nil? i)
+            coll
           (if-not (nil? n)
-            (do
-              (println (str c "\n" i "\n" n))
-              (let [s (solve-phase c i n)]
-                (do (println s)
-                    (recur s (first r) (rest r) t))))
-            (let [s (cpu/solve t i 0)]
-              (do
-                (println (str "S: " s))
-                (recur s nil nil (second s)))))))))
+              (let [s (solve-phase-interuptable c i n)]
+                (recur (first s) (first r) (rest r) (assoc mem memind s) (mod (inc memind) 5) (if (= 4 memind) (conj coll (first s)) coll)))
+              (let [s (cpu/solve-interuptable (second (nth mem memind)) i (last (nth mem memind)))]
+                  (if (nil? (first s))
+                    coll
+                    (recur (first s) nil nil (assoc mem memind s) (mod (inc memind) 5) (if (= 4 memind) (conj coll (first s)) coll))))))))
 
 (defn part-one [] (apply max (map (comp first #(check-phase (u/input-csv 7) 0 %)) (vec (map vec (permutations [0 1 2 3 4]))))))
 
@@ -52,8 +52,4 @@
 ;; => 117312
 ;; => "Elapsed time: 114.26 msecs"
 
-(println (u/input-csv 0))
-
-(cpu/solve (u/input-csv 7) 0 0)
-
-(first (check-phase (u/input-csv 0) 0 [9 7 8 5 6]))
+(defn part-two [] (apply max (map (partial last) (map #(check-phase-recursively (u/input-csv 7) 0 %) (vec (map vec (permutations [9 8 7 6 5])))))))

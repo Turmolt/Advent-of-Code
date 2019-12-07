@@ -56,4 +56,19 @@
                   o (execute s n m i)]
               (recur (first o) (second o) (peek o))))))))
 
+(defn solve-interuptable [c m si]
+  (loop [i si n c r nil]
+      (if (number? r)
+        [r n i]
+        (if (= 99 (nth n i))
+          (do (println (str "Halt!!"))
+              nil)
+          (let [op (opcode (nth n i))
+                step (steps (last op))]
+            (if (>= (+ step i) (count n)) (println n)
+                (let [s (subvec n i (+ step i))
+                      o (execute s n m i)]
+                  (recur (first o) (second o) (peek o)))))))))
+
+
 (time (solve (u/input-csv 5) 5 0))
