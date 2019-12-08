@@ -35,6 +35,7 @@
         (if (= \2 pix)
           (recur c (inc li) output)
           (recur (inc c) 0 (assoc output y (conj (nth output y) pix))))))))
+
 (time (part-one))
 ;; => 2684
 ;; => "Elapsed time: 0.134089 msecs"
