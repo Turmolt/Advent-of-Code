@@ -26,7 +26,6 @@
        (partition width)
        (map (partial map #(if (= \0 %) " " %)))))
 
-
 (time (part-one))
 ;; => 2684
 ;; => "Elapsed time: 3.837947 msecs"
