@@ -25,8 +25,8 @@
         [i p])))
 
 (defn check-phase-recursively [c m p]
-    (loop [i m n (first p) r (rest p) mem
-           (vec (take 5 (repeat [0 c]))) mi 0 coll []]
+    (loop [i m n (first p) r (rest p)
+           mem (vec (repeat 5 [0 c])) mi 0 coll []]
           (if (nil? i)
             coll
           (if-not (nil? n)
