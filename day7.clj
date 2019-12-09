@@ -13,7 +13,7 @@
   (let [op (cpu/opcode (nth c 0))
         step (cpu/steps (last op))
         s (subvec c 0 step)]
-    (->> (cpu/execute s c p 0)
+    (->> (cpu/execute s c p 0 0)
          (second)
          (#(cmd % m step)))))
 
