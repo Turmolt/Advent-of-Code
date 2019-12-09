@@ -15,3 +15,5 @@
 (defn input-lsv [d]
   (with-open [r (io/reader (path d))]
     (doall (line-seq r))))
+
+(defn input [d] (slurp (path d)))

@@ -2,7 +2,11 @@
   (:require [adventofcode.util :as u]
             [clojure.string :as str]))
 
-(def input (into {} (map (comp vec reverse) (map #(str/split % #"\)") (u/input-lsv 6)))))
+(def input 
+  (->> (u/input-lsv 6)
+       (map #(str/split % #"\)"))
+       (map (comp vec reverse))
+       (into {})))
 
 (defn build-chain [d k]
   (take-while identity (rest (iterate d k))))

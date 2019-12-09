@@ -39,9 +39,16 @@
                     (recur (first s) nil nil (assoc mem mi s)
                            (mod (inc mi) 5) (if (= 4 mi) (conj coll (first s)) coll))))))))
 
-(defn part-one [] (apply max (map (comp first #(check-phase (u/input-csv 7) 0 %)) (vec (map vec (permutations [0 1 2 3 4]))))))
+(defn part-one [] 
+  (->> (permutations [0 1 2 3 4])
+       (map (comp first #(check-phase (u/input-csv 7) 0 %)))
+       (apply max)))
 
-(defn part-two [] (apply max (map (partial last) (map #(check-phase-recursively (u/input-csv 7) 0 %) (vec (map vec (permutations [9 8 7 6 5])))))))
+(defn part-two [] 
+  (->> (permutations [9 8 7 6 5])
+       (map #(check-phase-recursively (u/input-csv 7) 0 %))
+       (map (partial last))
+       (apply max)))
 
 (time (part-one))
 ;; => 117312

@@ -8,9 +8,7 @@
 
 (def height (second size))
 
-(def input (slurp (u/path 8)))
-
-(def layers (partition (reduce * size) input))
+(def layers (partition (reduce * size) (u/input 8)))
 
 (defn part-one []
   (let [c (map frequencies layers)
