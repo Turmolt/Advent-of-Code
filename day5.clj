@@ -47,7 +47,7 @@
       5 (if-not (zero? n1) [n2 c ri] [ni c ri])
       6 (if (zero? n1) [n2 c ri] [ni c ri])
       7 (case n3m
-          2 [ni (put c  (fetch c (+ ri n3)) (if (< n1 n2) 1 0)) ri]
+          2 [ni (put c (fetch c n3) (if (< n1 n2) 1 0)) ri]
           [ni (put c n3 (if (< n1 n2) 1 0)) ri])
       8 (case n3m
           2 [ni (put c (fetch c n3) (if (= n1 n2) 1 0)) ri]
