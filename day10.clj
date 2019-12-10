@@ -42,9 +42,8 @@
 (defn part-two [station]
   (->> asteroids
        (remove (partial = station))
-       (vec)
        (map (partial find-angles-indexed-distance station))
-       (sort-by #(mod (- (second %) 90) 360))
+       (sort-by #(mod (+ (second %) 270) 360))
        (partition-by second)
        (map reverse)
        (#(last (nth % 199)))
