@@ -36,15 +36,81 @@
      :coordinates new-coord
      :color-under (get-color painted-canvas new-coord)}))
 
-(defn part-one []
+(defn run-robot [start-color]
   (loop [painter-memory {:canvas blank-canvas
                          :direction 0
                          :coordinates [0 0]
-                         :color-under \b}
+                         :color-under start-color}
          cpu-memory [blank-memory 0 0]]
-    (let [cpu-output (run-cpu (first cpu-memory) (color->instruction (painter-memory :color-under)) (second cpu-memory) (last cpu-memory) 2)]
+    (let [cpu-output (run-cpu (first cpu-memory)
+                              (color->instruction (painter-memory :color-under))
+                              (second cpu-memory)
+                              (last cpu-memory) 2)]
       (if (some nil? (cpu-output :painter-input))
         (painter-memory :canvas)
         (recur (run-painter painter-memory (cpu-output :painter-input)) (cpu-output :memory))))))
 
-(println (count (part-one)))
+(defn part-one []
+  (->> (run-robot \b)
+       (count)))
+
+(defn part-two []
+  (->> (run-robot \w)
+       (sort-by #(first (first %)))
+       (partition-by #(first (first %)))
+       (map (partial sort-by first))
+       (map (partial map second))
+       (map (partial map #(if (= % \b) " " "#")))
+       (reverse)
+       (map println)))
+
+;(time (part-one))
+;; => 2041
+;; => "Elapsed time: 1170.0913 msecs"
+
+(time (part-two))
+;; => (     )
+;;    (nil(# #       #)
+;;     nil(#   #     #)
+;;     nil(#     #   #)
+;;     nil(#       # #)
+;;     nil(           )
+;;     nil(# # # # # #)
+;;     nil(    #     #)
+;;     nil(  # #     #)
+;;     nil(#     # #  )
+;;     nil(           )
+;;     nil(# #       #)
+;;     nil(#   #     #)
+;;     nil(#     #   #)
+;;     nil(#       # #)
+;;     nil(           )
+;;     nil(# # # # # #)
+;;     nil(    #     #)
+;;     nil(    #     #)
+;;     nil(      # #  )
+;;     nil(           )
+;;     nil(# # # # # #)
+;;     nil(      #    )
+;;     nil(  # #   #  )
+;;     nil(#         #)
+;;     nil(           )
+;;     nil(# # # # # #)
+;;     nil(#     #   #)
+;;     nil(#     #   #)
+;;     nil(#         #)
+;;     nil(           )
+;;     nil(# #       #)
+;;     nil(#   #     #)
+;;     nil(#     #   #)
+;;     nil(#       # #)
+;;     nil(           )
+;;     nil(# # # # # #)
+;;     nil(    #     #)
+;;     nil(  # #     #)
+;;     nil(#     # #  )
+;;     nil(           )
+;;     nil(       )
+;;     nil(   )
+;;     nil)
+;; => "Elapsed time: 124.2382 msecs"
