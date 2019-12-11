@@ -43,13 +43,28 @@
   (->> asteroids
        (remove (partial = station))
        (map (partial find-angles-indexed-distance station))
-       (sort-by #(mod (+ (second %) 270) 360))
-       (partition-by second)
-       (map reverse)
-       (#(last (nth % 199)))
-       (last)))
+       (sort-by #(mod (+ (second %) 270) 360))))
 
-(time (part-one))
+(defn testfn [coll idx itm] 
+  (let [trimmed (second itm)
+        angle (second itm)
+        trimmedcoll (map second coll)
+        fq (frequencies trimmedcoll)
+        cnt (fq trimmed)
+        fidx (.indexOf trimmedcoll trimmed)
+        nxt (if (> (count trimmedcoll) (+ 1 idx)) (nth trimmedcoll (+ 1 idx)) nil)]
+    (if (= cnt 1) itm
+        (if (= nxt trimmed)
+          (assoc itm 1 (+ (* (- cnt (- idx fidx) 1) 360) angle))
+          itm))))
+
+(def testinput [[0 1 [1 6]] [0 1 [99 8]] [0 1 [83 9]] [2 3 [120 91]]])
+
+(sort-by #(+ (second %) 90) < (map-indexed (partial testfn (part-two [31 20])) (part-two [31 20])))
+
+;(part-two [31 20])
+
+;(time (part-one))
 ;; => [[31 20] 319]
 ;; => "Elapsed time: 206.7806 msecs"
 
