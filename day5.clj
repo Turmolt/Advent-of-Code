@@ -43,7 +43,9 @@
       3 (case n1m
           2 [ni (put c (+ ri (second s)) m) ri]
           [ni (put c (second s) m) ri])
-      4 [ni c (fetch c n1) ri]
+      4 (case n1m 
+          1 [ni c n1 ri]
+          [ni c (fetch c n1) ri])
       5 (if-not (zero? n1) [n2 c ri] [ni c ri])
       6 (if (zero? n1) [n2 c ri] [ni c ri])
       7 (case n3m
@@ -67,16 +69,16 @@
               o (execute s n m i ri)]
           (recur (first o) (second o) (first (take-last 2 o)) (peek o)))))))
 
-(defn solve-interuptable [c m si]
-  (loop [i si n c r nil ri 0]
+(defn solve-interuptable [c m si sri]
+  (loop [i si n c r nil ri sri]
       (if (number? r)
-        [r n i]
-        (if (= 99 (nth n i))
+        [r n i ri]
+        (if (= 99 (fetch n i))
           nil
           (let [op (opcode (fetch n i))
                 step (steps (last op))]
             (if (>= (+ step i) (count n)) (println n)
-                (let [s (get-code n i step)
+                (let [s (vec (get-code n i step))
                       o (execute s n m i ri)]
                   (recur (first o) (second o) (first (take-last 2 o)) (peek o)))))))))
 
