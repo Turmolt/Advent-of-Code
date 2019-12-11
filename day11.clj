@@ -27,7 +27,7 @@
 (defn +v [[w x] [y z]]
   [(+ w y) (+ x z)])
 
-(defn run-painter [painter-memory paint move]
+(defn run-painter [painter-memory [paint move]]
   (let [painted-canvas (assoc (painter-memory :canvas) (painter-memory :coordinates) (paint-color paint))
         new-dir (change-direction (painter-memory :direction) move)
         new-coord (+v (painter-memory :coordinates) (direction new-dir))]
@@ -41,13 +41,10 @@
                          :direction 0
                          :coordinates [0 0]
                          :color-under \b}
-         cpu-memory [blank-memory 0 0]
-         i 0]
-    (let [cpu-output (run-cpu (first cpu-memory) (color->instruction (painter-memory :color-under)) (second cpu-memory) (last cpu-memory) 2)
-          cpu-out-mem (cpu-output :memory) cpu-out-instructions (cpu-output :painter-input)]
-      (println (painter-memory :color-under))
-      (if (nil? (first cpu-out-instructions))
+         cpu-memory [blank-memory 0 0]]
+    (let [cpu-output (run-cpu (first cpu-memory) (color->instruction (painter-memory :color-under)) (second cpu-memory) (last cpu-memory) 2)]
+      (if (some nil? (cpu-output :painter-input))
         (painter-memory :canvas)
-        (recur (run-painter painter-memory (first cpu-out-instructions) (second cpu-out-instructions)) cpu-out-mem (inc i))))))
+        (recur (run-painter painter-memory (cpu-output :painter-input)) (cpu-output :memory))))))
 
 (println (count (part-one)))
