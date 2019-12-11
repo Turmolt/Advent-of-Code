@@ -43,7 +43,7 @@
       3 (case n1m
           2 [ni (put c (+ ri (second s)) m) ri]
           [ni (put c (second s) m) ri])
-      4 (case n1m 
+      4 (case n1m
           1 [ni c n1 ri]
           [ni c (fetch c n1) ri])
       5 (if-not (zero? n1) [n2 c ri] [ni c ri])
