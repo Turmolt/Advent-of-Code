@@ -18,7 +18,8 @@
   (with-open [r (io/reader (path d))]
     (doall (line-seq r))))
 
-
 (defn find-first [pred coll] (first (filter pred coll)))
 
-(defn sign [x] (Math/signum (float x)))
+(defn gcd [x y] (if (zero? y) x (recur y (mod x y))))
+
+(defn lcm [x y] (/ (* x y) (gcd x y)))
