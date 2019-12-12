@@ -24,13 +24,10 @@
 (defn change-direction [dir ins]
   (case ins 0 (mod (- dir 90) 360) 1 (mod (+ dir 90) 360)))
 
-(defn +v [[w x] [y z]]
-  [(+ w y) (+ x z)])
-
 (defn run-painter [painter-memory [paint move]]
   (let [painted-canvas (assoc (painter-memory :canvas) (painter-memory :coordinates) (paint-color paint))
         new-dir (change-direction (painter-memory :direction) move)
-        new-coord (+v (painter-memory :coordinates) (direction new-dir))]
+        new-coord (mapv + (painter-memory :coordinates) (direction new-dir))]
     {:canvas painted-canvas
      :direction new-dir
      :coordinates new-coord
@@ -62,7 +59,6 @@
        (map (partial map second))
        (map (partial map #(if (= % \b) " " "#")))
        (reverse)
-       (vec)
        (map println)))
 
 ;(time (part-one))
