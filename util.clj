@@ -17,3 +17,8 @@
 (defn input-lsv [d]
   (with-open [r (io/reader (path d))]
     (doall (line-seq r))))
+
+
+(defn find-first [pred coll] (first (filter pred coll)))
+
+(defn sign [x] (Math/signum (float x)))
