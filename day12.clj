@@ -37,7 +37,7 @@
   (let [dx (compare (position other-moon :x) (position target :x))
         dy (compare (position other-moon :y) (position target :y))
         dz (compare (position other-moon :z) (position target :z))]
-    {:x (u/sign dx) :y (u/sign dy) :z (u/sign dz)}))
+    {:x dx :y dy :z dz}))
 
 ;this is yucky.. but i don't know a better clojure way to do it yet. reduce [[1 2] [1 2] [1 2]] => [3 6]
 ;if you see this and know of a better way (because of course clojure has a macro for this i just can't find it) id love for you to let me know
@@ -68,7 +68,6 @@
 (defn part-one []
   (->> (loop [moons parsed-moons iterations 0]
          (if (>= iterations 1000) moons
-             ;(do (println moons))
              (recur (mapv (partial update-moon moons) moons) (inc iterations))))
        (map reduce-energy)
        (reduce +)))

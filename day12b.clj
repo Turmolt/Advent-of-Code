@@ -23,16 +23,16 @@
     [new-pos new-vel]))
 
 (defn period [state]
-  (.indexOf
-   (->> state
-        (iterate time-step)
-        (rest))
-   state))
+  (+ 1 (.indexOf
+        (->> state
+             (iterate time-step)
+             (rest))
+        state)))
 
 (defn part-two []
   (->> [x-axis-s0 y-axis-s0 z-axis-s0]
        (map period)
-       (map inc)
-       (reduce u/lcm)))
+       (reduce u/lcm)
+       (println)))
 
-(println (part-two))
+(part-two)
