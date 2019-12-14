@@ -37,6 +37,9 @@
 
 (def should-ask (atom true))
 
+(defn use-science [p b x]
+  (compare (first (key b)) (first (key p))))
+
 (defn run-cpu-with-input [mem idx ridx]0
   (loop [cpu-output (cpu/solve-input mem @in idx ridx true)
          output {:memory [] :board {}}
@@ -47,9 +50,8 @@
         (if (= \I (first cpu-output))
           (do (doall (display-board (assoc (output :board) [(first buffer) (second buffer)] (last buffer))))
               (println "Score: " ((output :board) [-1 0]))
-              (swap! in (fn [x] (let [p (first (filter #(= (val %) 3) (output :board)))
-                                      b (first (filter #(= (val %) 4) (assoc (output :board) [(first buffer) (second buffer)] (last buffer))))]
-                                  (- (first (key b)) (first (key p))))))
+              (swap! in (partial use-science (first (filter #(= (val %) 3) (output :board)))
+                                 (first (filter #(= (val %) 4) (assoc (output :board) [(first buffer) (second buffer)] (last buffer))))))
               (swap! should-ask (fn [x] (identity false))))
           (swap! should-ask (fn [x] (identity true))))
         (let [op (cpu/solve-input (second cpu-output) @in (nth cpu-output 2) (last cpu-output) @should-ask)]
@@ -79,4 +81,4 @@
 
 ;(part-one)
 
-;(part-two)
+(part-two)
