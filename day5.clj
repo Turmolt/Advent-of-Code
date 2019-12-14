@@ -82,4 +82,19 @@
                       o (execute s n m i ri)]
                   (recur (first o) (second o) (first (take-last 2 o)) (peek o)))))))))
 
+(defn solve-input [c m si sri asking]
+  (loop [i si n c r nil ri sri a asking]
+    (if (number? r)
+      [r n i ri]
+      (if (= 99 (fetch n i))
+        nil
+        (if (and a (= \3 (last (str (fetch n i)))))
+          [\I n i ri]
+          (let [op (opcode (fetch n i))
+                step (steps (last op))]
+            (if (>= (+ step i) (count n)) (println n)
+                (let [s (vec (get-code n i step))
+                      o (execute s n m i ri)]
+                  (recur (first o) (second o) (first (take-last 2 o)) (peek o) true)))))))))
+
 (time (solve (create-memory (u/input-csv 5)) 5 0))
