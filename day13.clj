@@ -8,10 +8,6 @@
 
 (def tile {0 " " 1 "X" 2 "#" 3 "=" 4 "o"})
 
-(defn get-tile [dict key]
-  (if (contains? dict key) (tile (dict key)) " "))
-
-
 (defn display-board [b]
   (let [coords (remove #(= [-1 0] %) (remove nil? (keys b)))
         minX (first (first (sort-by first coords)))
@@ -38,6 +34,7 @@
              (assoc output [(first (cpu-output :output)) (second (cpu-output :output))] (last (cpu-output :output)))))))
 
 (def in (atom 0))
+
 (def should-ask (atom true))
 
 (defn run-cpu-with-input [mem idx ridx]0
