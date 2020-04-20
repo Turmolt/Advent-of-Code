@@ -1,6 +1,3 @@
-;; => I failed day 12 part b so I am rebuilding another's answer in hopes that I can understand it better
-;; => https://github.com/fdlk/advent-2019/blob/master/src/advent_2019/day12.clj
-;; => FeelsBadMan
 (ns adventofcode.day12b
   (:require [adventofcode.util :as u]))
 
