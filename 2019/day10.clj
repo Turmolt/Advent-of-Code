@@ -1,8 +1,8 @@
-(ns adventofcode.day10
+(ns adventofcode.2019.day10
   (:require [adventofcode.util :as u]
             [clojure.string :as str]))
 
-(def asteroid-field (remove nil? (str/split-lines (u/input 10))))
+(def asteroid-field (remove nil? (str/split-lines (u/input 2019 10))))
 
 (defn get-coord [width idx itm]
   [[(mod idx width) (int (/ idx width))] itm])

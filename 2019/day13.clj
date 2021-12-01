@@ -1,10 +1,10 @@
-(ns adventofcode.day13
+(ns adventofcode.2019.day13
   (:require [adventofcode.util :as u]
-            [adventofcode.day5 :as cpu]))
+            [adventofcode.2019.day5 :as cpu]))
 
-(def blank-memory-a [(cpu/create-memory (u/input-csv 13)) 0 0])
+(def blank-memory-a [(cpu/create-memory (u/input-csv 2019 13)) 0 0])
 
-(def blank-memory-b (cpu/create-memory (u/input-csv "13b")))
+(def blank-memory-b (cpu/create-memory (u/input-csv 2019 "13b")))
 
 (def tile {0 " " 1 "X" 2 "#" 3 "=" 4 "o"})
 

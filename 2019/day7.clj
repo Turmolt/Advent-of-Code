@@ -1,6 +1,6 @@
-(ns adventofcode.day7
+(ns adventofcode.2019.day7
   (:require [adventofcode.util :as u]
-            [adventofcode.day5 :as cpu]))
+            [adventofcode.2019.day5 :as cpu]))
 
 (defn permutations [s]
   (lazy-seq 
@@ -41,12 +41,12 @@
 
 (defn part-one [] 
   (->> (permutations [0 1 2 3 4])
-       (map (comp first #(check-phase (u/input-csv 7) 0 %)))
+       (map (comp first #(check-phase (u/input-csv 2019 7) 0 %)))
        (apply max)))
 
 (defn part-two [] 
   (->> (permutations [9 8 7 6 5])
-       (map #(check-phase-recursively (u/input-csv 7) 0 %))
+       (map #(check-phase-recursively (u/input-csv 2019 7) 0 %))
        (map (partial last))
        (apply max)))
 

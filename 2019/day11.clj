@@ -1,8 +1,8 @@
-(ns adventofcode.day9
+(ns adventofcode.2019.day9
   (:require [adventofcode.util :as u]
-            [adventofcode.day5 :as cpu]))
+            [adventofcode.2019.day5 :as cpu]))
 
-(def blank-memory (cpu/create-memory (u/input-csv 11)))
+(def blank-memory (cpu/create-memory (u/input-csv 2019 11)))
 
 (def blank-canvas {[0 0] \e})
 

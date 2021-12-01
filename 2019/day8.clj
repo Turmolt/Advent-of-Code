@@ -1,4 +1,4 @@
-(ns adventofcode.day8
+(ns adventofcode.2019.day8
   (:require [adventofcode.util :as u]
             [clojure.string :as str]))
 
@@ -8,7 +8,7 @@
 
 (def height (second size))
 
-(def layers (partition (reduce * size) (u/input 8)))
+(def layers (partition (reduce * size) (u/input 2019 8)))
 
 (defn part-one []
   (let [c (map frequencies layers)

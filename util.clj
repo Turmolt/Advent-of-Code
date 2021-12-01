@@ -2,20 +2,20 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(defn path [d]
-  (str "input/day" d ".txt"))
+(defn path [y d]
+  (str y "/input/day" d ".txt"))
 
-(defn input [d] (slurp (path d)))
+(defn input [y d] (slurp (path y d)))
 
 ;TODO: merge two methods below
-(defn input-lcsv [d]
-  (map #(str/split % #",") (str/split-lines (input d))))
+(defn input-lcsv [y d]
+  (map #(str/split % #",") (str/split-lines (input y d))))
 
-(defn input-csv [d]
-  (vec (map read-string (str/split (input d) #","))))
+(defn input-csv [y d]
+  (vec (map read-string (str/split (input y d) #","))))
 
-(defn input-lsv [d]
-  (with-open [r (io/reader (path d))]
+(defn input-lsv [y d]
+  (with-open [r (io/reader (path y d))]
     (doall (line-seq r))))
 
 (defn find-first [pred coll] (first (filter pred coll)))

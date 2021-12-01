@@ -1,9 +1,9 @@
-(ns adventofcode.day6
+(ns adventofcode.2019.day6
   (:require [adventofcode.util :as u]
             [clojure.string :as str]))
 
 (def input 
-  (->> (u/input-lsv 6)
+  (->> (u/input-lsv 2019 6)
        (map #(str/split % #"\)"))
        (map (comp vec reverse))
        (into {})))

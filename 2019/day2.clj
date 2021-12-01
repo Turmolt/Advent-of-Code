@@ -1,4 +1,4 @@
-(ns adventofcode.day2
+(ns adventofcode.2019.day2
   (:require [clojure.string :as str]
             [adventofcode.util :as u]))
 
@@ -30,4 +30,4 @@
             (println (str "n: " n " v: " v " r: " (first a)))
             (recur (int (/ i 99)) (mod i 100) (inc i))))))))
 
-(find-pairs (u/input-csv 2))
+(find-pairs (u/input-csv 2019 2))

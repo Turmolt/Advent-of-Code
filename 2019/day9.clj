@@ -1,9 +1,9 @@
-(ns adventofcode.day9
+(ns adventofcode.2019.day9
   (:require [adventofcode.util :as u]
-            [adventofcode.day5 :as cpu]))
+            [adventofcode.2019.day5 :as cpu]))
 
 (defn solve [i]
-  (->> (u/input-csv 9)
+  (->> (u/input-csv 2019 9)
        (cpu/create-memory)
        (#(cpu/solve % i 0))))
 

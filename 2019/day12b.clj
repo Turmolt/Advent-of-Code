@@ -1,4 +1,4 @@
-(ns adventofcode.day12b
+(ns adventofcode.2019.day12b
   (:require [adventofcode.util :as u]))
 
 (def x-axis-s0 [[9 -3 -4 0] [0 0 0 0]])

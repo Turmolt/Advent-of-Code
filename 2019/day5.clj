@@ -1,4 +1,4 @@
-(ns adventofcode.day5
+(ns adventofcode.2019.day5
   (:require [adventofcode.util :as u]
             [clojure.string :as str]))
 
@@ -97,4 +97,4 @@
                       o (execute s n m i ri)]
                   (recur (first o) (second o) (first (take-last 2 o)) (peek o) true)))))))))
 
-(time (solve (create-memory (u/input-csv 5)) 5 0))
+(time (solve (create-memory (u/input-csv 2019 5)) 5 0))

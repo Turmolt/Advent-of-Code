@@ -1,4 +1,4 @@
-(ns adventofcode.day1
+(ns adventofcode.2019.day1
   (:require [adventofcode.util :as u]))
 
 (defn calculate [i]
@@ -16,7 +16,7 @@
 
 (defn solve [l] (println (reduce calculate2 0 l)))
 
-(solve (map read-string (u/input-lsv 1)))
+(solve (map read-string (u/input-lsv 2019 1)))
 
 
-(println (u/input-lsv 1))
+(println (u/input-lsv 2019 1))

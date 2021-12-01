@@ -1,8 +1,8 @@
-(ns adventofcode.day12
+(ns adventofcode.2019.day12
   (:require [adventofcode.util :as u]
             [clojure.string :as str]))
 
-(def input (->> (u/input 0)
+(def input (->> (u/input 2019 0)
                 (#(str/replace % #"\<" ""))
                 (#(str/replace % #"\>" ""))
                 (str/split-lines)
