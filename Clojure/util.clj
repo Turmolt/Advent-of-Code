@@ -14,6 +14,9 @@
 (defn input-csv [y d]
   (vec (map read-string (str/split (input y d) #","))))
 
+(defn input-csv-long [y d]
+  (vec (map #(Long/parseLong %) (str/split (input y d) #","))))
+
 (defn input-lsv [y d]
   (with-open [r (io/reader (path y d))]
     (doall (line-seq r))))
