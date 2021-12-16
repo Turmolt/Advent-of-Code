@@ -31,45 +31,51 @@ namespace Advent_of_Code.Solutions
             
             return risk;
         }
-        
-        string[] TileMap(string[] data)
+
+        void Dijkstras(int src)
         {
-            var xLength = data[0].Length;
-            var yLength = data.Length;
-            var tiled = new string[yLength * 5];
-            for (int y = 0; y < yLength*5; y++)
+            int[] dist = new int[allNodes.Length * tiles * tiles];
+            bool[] visited = new bool[allNodes.Length * tiles * tiles];
+
+            PriorityQueue<int, int> queue = new PriorityQueue<int, int>();
+            
+            for (int i = 0; i < allNodes.Length * tiles * tiles; i++)
             {
-                var yAddition = y / yLength;
-                var yIndex = (y % yLength);
-                for (int x = 0; x < xLength * 5; x++)
+                dist[i] = int.MaxValue;
+                visited[i] = false;
+            }
+
+            dist[src] = 0;
+            queue.Enqueue(src, 0);
+
+            while (queue.Count > 0)
+            {
+                int u = queue.Dequeue();
+
+                var neighbors = GetNeighbors(u);
+
+                if (u == (allNodes.Length * tiles * tiles - 1))
                 {
-                    var xAddition = x / xLength;
-                    var xIndex = (x % xLength);
-                    var targetNum = int.Parse($"{data[yIndex][xIndex]}");
-                    var num = (targetNum + xAddition + yAddition);
-                    if (num >= 10) num %= 9;
-                    tiled[y] += $"{num}";
+                    Console.WriteLine($"Path found! Shortest cost is {dist[u]}");
+                    return;
+                }
+                
+                for (int i = 0; i < neighbors.Length; i++)
+                {
+                    var v = neighbors[i];
+                    var edge = GetGraphValue(u, v);
+                    if (!visited[v] && edge != 0 &&
+                        dist[u] != int.MaxValue && dist[u] + edge < dist[v])
+                    {
+                        dist[v] = dist[u] + edge;
+                        visited[v] = true;
+                        queue.Enqueue(v, dist[v]);
+                    }
                 }
             }
-
-            return tiled;
+            Console.WriteLine("No path found!");
         }
-
-        int FindMinimum(int[] dist, bool[] sptSet)
-        {
-            int min = int.MaxValue, min_index = -1;
-            for (int v = 0; v < allNodes.Length * tiles * tiles; v++)
-            {
-                if (sptSet[v]) continue;
-                if (dist[v] >= min) continue;
-
-                min = dist[v];
-                min_index = v;
-            }
-
-            return min_index;
-        }
-
+        
         int GetGraphValue(int u, int v)
         {
             int maxX = tiles * xLength;
@@ -79,10 +85,18 @@ namespace Advent_of_Code.Solutions
             int x2 = (v % maxX);
             int y2 = (v / maxX);
 
-            if (!IsValidMoveTiled(x2, y2)) return 0;
+            if (!IsValidMoveTiled(x2, y2))
+            {
+                Console.WriteLine("Not valid Tile");
+                return 0;
+            }
             
             var deltaTiles = Math.Abs(x2 - x) + Math.Abs(y2 - y);
-            if (deltaTiles > 1) return 0;
+            if (deltaTiles > 1)
+            {
+                Console.WriteLine($"IDs: {u} and {v}\n{x2},{y2} - {x},{y}");
+                return 0;
+            }
             
             return GetTiledRisk(x2, y2);
         }
@@ -90,13 +104,11 @@ namespace Advent_of_Code.Solutions
         int[] GetNeighbors(int id)
         {
             List<int> available = new List<int>();
-            int maxX = 5 * xLength;
-            int maxY = 5 * yLength;
+            
+            int maxX = tiles * xLength;
+            int maxY = tiles * yLength;
             int xVal = (id % maxX);
             int yVal = (id / maxX);
-            int lookupX = xVal % xLength;
-            int lookupY = yVal % yLength;
-            int additionalRisk = (xVal / xLength) + (yVal / yLength);
             
             for (int dy = -1; dy <= 1; dy++)
             {
@@ -107,50 +119,17 @@ namespace Advent_of_Code.Solutions
                 {
                     var nx = xVal + dx;
                     if(nx < 0 || nx >= maxX) continue;
+                    if (Math.Abs(dx) == Math.Abs(dy)) continue;
+                    
+                    var targetId = (ny * maxX) + nx;
 
-                    var targetId = (ny * xLength) + nx;
                     available.Add(targetId);
                 }
             }
-
+            
             return available.ToArray();
         }
 
-        void Dijkstras(int src)
-        {
-            int[] dist = new int[allNodes.Length * tiles * tiles];
-            bool[] sptSet = new bool[allNodes.Length * tiles * tiles];
-
-            for (int i = 0; i < allNodes.Length * tiles * tiles; i++)
-            {
-                dist[i] = int.MaxValue;
-                sptSet[i] = false;
-            }
-
-            dist[src] = 0;
-
-            for (int count = 0; count < allNodes.Length * tiles * tiles - 1; count++)
-            {
-                int u = FindMinimum(dist, sptSet);
-
-                sptSet[u] = true;
-
-                if (count % 1000 == 0) Console.WriteLine(count);
-                
-                for (int v = 0; v < allNodes.Length * tiles * tiles; v++)
-                {
-                    if (!sptSet[v] && GetGraphValue(u, v) != 0 &&
-                        dist[u] != int.MaxValue && dist[u] + GetGraphValue(u, v) < dist[v])
-                    {
-                        dist[v] = dist[u] + GetGraphValue(u, v);
-                    }
-
-                }
-            }
-            
-            Console.WriteLine($"Total Cost: {dist[allNodes.Length * tiles * tiles-1]}");
-        }
-        
         void ParseData(string[] data)
         {
             allNodes = new (int risk, int id, (int x, int y) coordinates)[data.Length * data[0].Length];
