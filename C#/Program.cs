@@ -12,7 +12,7 @@ namespace Advent_of_Code
             var data = System.IO.File.ReadAllLines("data.txt");
             var watch = new System.Diagnostics.Stopwatch();
             
-            IChallenge d = new Day16();
+            IChallenge d = new Day17();
             
             watch.Start();
             d.Solve(data);
