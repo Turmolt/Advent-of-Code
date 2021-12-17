@@ -19,9 +19,9 @@ namespace Advent_of_Code.Solutions
 
             const int maxVelocityToTest = 1000;
 
-            for (var y = -maxVelocityToTest; y <= maxVelocityToTest; y++)
+            for (var y = minY; y <= maxVelocityToTest; y++)
             {
-                for (var x = -maxVelocityToTest; x <= maxVelocityToTest; x++)
+                for (var x = 0; x <= maxVelocityToTest; x++)
                 {
                     var velocity = (x, y);
                     (int highest, bool hit) = TryVelocity(velocity.x, velocity.y);
