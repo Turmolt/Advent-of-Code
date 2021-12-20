@@ -2,26 +2,26 @@
 using System.Threading;
 using System.Collections.Generic;
 using Advent_of_Code.Solutions;
+using static Advent_of_Code.G8S;
 
-namespace Advent_of_Code
+namespace Advent_of_Code;
+
+public static class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            var data = System.IO.File.ReadAllLines("data.txt");
-            var watch = new System.Diagnostics.Stopwatch();
+        var data = System.IO.File.ReadAllLines("data.txt");
+        var watch = new System.Diagnostics.Stopwatch();
             
-            IChallenge d = new Day18();
+        IChallenge d = new Day19();
+  
+        watch.Start();
+        d.Solve(data);
+        watch.Stop();
             
-            watch.Start();
-            d.Solve(data);
-            watch.Stop();
-            
-            Console.WriteLine($"Elapsed milliseconds: {watch.ElapsedMilliseconds}");
+        Console.WriteLine($"Elapsed milliseconds: {watch.ElapsedMilliseconds}");
 
-            Console.ReadKey();
-        }
-
+        Console.ReadKey();
     }
+
 }
