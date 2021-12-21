@@ -13,7 +13,7 @@ public static class Program
         var data = System.IO.File.ReadAllLines("data.txt");
         var watch = new System.Diagnostics.Stopwatch();
             
-        IChallenge d = new Day19();
+        IChallenge d = new Day20();
   
         watch.Start();
         d.Solve(data);
