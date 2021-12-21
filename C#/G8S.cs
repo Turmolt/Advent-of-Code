@@ -4,7 +4,7 @@ namespace Advent_of_Code;
 
 public static class G8S
 {
-    private const bool LOG = false;
+    private const bool LOG = true;
 
     public static void Log(object n, bool writeLine = true, bool force = false) => Log($"{n}",writeLine,force);
     

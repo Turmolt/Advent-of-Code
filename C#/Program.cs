@@ -13,12 +13,12 @@ public static class Program
         var data = System.IO.File.ReadAllLines("data.txt");
         var watch = new System.Diagnostics.Stopwatch();
             
-        IChallenge d = new Day20();
+        IChallenge d = new Day21();
   
         watch.Start();
         d.Solve(data);
         watch.Stop();
-            
+        
         Console.WriteLine($"Elapsed milliseconds: {watch.ElapsedMilliseconds}");
 
         Console.ReadKey();

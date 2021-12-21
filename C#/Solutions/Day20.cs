@@ -13,7 +13,7 @@ public class Day20 : IChallenge
 
     private int xSize;
     private int ySize;
-    private int padding = 5;
+    private int padding = 1;
 
     private Bounds bounds;
     
