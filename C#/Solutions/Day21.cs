@@ -13,9 +13,8 @@ public class Day21 : IChallenge
         public int Player2Score;
         public int Player2Position;
         public Turn Current;
-        public int LastResult;
-        
-        public enum Turn
+
+        public enum Turn : byte
         {
             Player1,
             Player2
@@ -28,7 +27,6 @@ public class Day21 : IChallenge
             Player2Score = template.Player2Score;
             Player2Position = template.Player2Position;
             Current = template.Current == Turn.Player1 ? Turn.Player2 : Turn.Player1;
-            LastResult = template.LastResult;
         }
 
         public GameState(int p1Score, int p1Position, int p2Score, int p2Position, Turn current, int lastResult)
@@ -38,14 +36,12 @@ public class Day21 : IChallenge
             Player2Score = p2Score;
             Player2Position = p2Position;
             Current = current;
-            LastResult = lastResult;
         }
 
         public GameState MovePlayer(int number)
         {
             var next = new GameState(this)
             {
-                LastResult = number
             };
             switch (Current)
             {
@@ -74,8 +70,9 @@ public class Day21 : IChallenge
 
         public override string ToString()
         {
-            return
-                $"Turn: {Current}\nP1: (S: {Player1Score}, P: {Player1Position})\nP2: (S: {Player2Score}, P: {Player2Position})";
+            return $"Turn: {Current}\n"+
+                   "P1: (S: {Player1Score}, P: {Player1Position})\n"+ 
+                   "P2: (S: {Player2Score}, P: {Player2Position})";
         }
     }
 
@@ -92,11 +89,14 @@ public class Day21 : IChallenge
 
     void StartRecursiveGame(int p1Start, int p2Start)
     {
-        Log($"Starting recursive game:\nP1Start: {p1Start}\nP2Start: {p2Start}");
+        Log($"Starting recursive game:\n"+
+                $"P1Start: {p1Start}\n"+
+                $"P2Start: {p2Start}");
         var state = new GameState(0, p1Start, 0, p2Start, GameState.Turn.Player1,0);
         var results = CheckAllPossible(state);
         Log($"Player 1 Wins: {results.p1Wins} times\n"+
-            $"Player 2 Wins: {results.p2Wins} times");
+                $"Player 2 Wins: {results.p2Wins} times\n"+
+                $"Part 2 Answer: {Math.Max(results.p1Wins, results.p2Wins)}");
     }
 
     (ulong, ulong) RecursiveStep(GameState last, int diceResult)
