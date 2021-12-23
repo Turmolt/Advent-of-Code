@@ -6,66 +6,251 @@ namespace Advent_of_Code.Solutions;
 using static G8S;
 public class Day22 : IChallenge
 {
-    private List<Box> instructions;
+    private List<Instruction> instructions;
 
-    private Dictionary<Coordinate, bool> map;
     public void Solve(string[] data)
     {
         ParseData(data);
-
-        // Part 1
+        
         int executed = 0;
 
         var boxes = new List<Box>();
 
-        executed = 0;
-
-        
-        foreach (var box in instructions)
+        foreach (var instruction in instructions)
         {
-            var overlapping = boxes.Select(intersector => GetOverlappingBox(box, intersector)).ToList();  
-            var validOverlaps = overlapping.Where(ValidOverlap).ToList();
-            boxes.AddRange(validOverlaps);
-
-            if (box.state)
-                boxes.Add(box);            
-        
+            ExecuteInstruction(ref boxes, instruction);
             executed++;
-            Log($"{executed}/{instructions.Count} complete");
+            //Log($"{executed}/{instructions.Count} complete");
         }
 
-        var sum = boxes.Sum(b => b.Size * (b.state ? 1L : -1));
+        var sum = boxes.Sum(b => b.Size);
         Log($"Part 2 Answer: {sum}");
     }
 
-    bool ValidOverlap(Box a)
+    void ExecuteInstruction(ref List<Box> boxes, Instruction instruction, bool clamp = false)
     {
-        return a.x.lo <= a.x.hi && a.y.lo <= a.y.hi && a.z.lo <= a.z.hi;
+        var boxesAfterInstruction = new List<Box>();
+
+        if (clamp && !Intersects(instruction.box,
+                new Box(new Range(-50, 50), new Range(-50, 50), new Range(-50, 50)))) return;
+        
+        foreach (var box in boxes)
+        {
+            SplitRecursively(ref boxesAfterInstruction, box, instruction.box, new List<Split>());
+        }
+
+        if (instruction.command)
+            boxesAfterInstruction.Add(instruction.box);
+        
+        boxes = boxesAfterInstruction;
     }
 
-    record Coordinate(int x, int y, int z);
-
-    record Range(int lo, int hi);
-    
-    record Box(bool state, Range x, Range y, Range z)
+    void SplitRecursively(ref List<Box> boxes, Box target, Box intersector, List<Split> previousSplits)
     {
-        public long Size => ((x.hi - x.lo + 1L) * (y.hi - y.lo + 1) * (z.hi - z.lo + 1));
-        public override string ToString()
+        if (!Intersects(target, intersector))
         {
-            return $"{x.lo},{x.hi} | {y.lo},{y.hi} | {z.lo},{z.hi}";
+            boxes.Add(target);
+            return;
+        }
+        
+        if (!previousSplits.Contains(Split.PreX))
+        {
+            var (positive, negative) = target.SplitAlongAxis(Split.PreX, intersector.x.min);
+            CheckSquare(ref boxes, positive, intersector, new List<Split>(previousSplits) { Split.PreX });
+            CheckSquare(ref boxes, negative, intersector, new List<Split>(previousSplits) { Split.PreX });
+            return;
+        }
+
+        if (!previousSplits.Contains(Split.PostX))
+        {
+            var (positive, negative) = target.SplitAlongAxis(Split.PostX, intersector.x.max);
+            CheckSquare(ref boxes, positive, intersector, new List<Split>(previousSplits) { Split.PostX });
+            CheckSquare(ref boxes, negative, intersector, new List<Split>(previousSplits) { Split.PostX });
+            return;
+        }
+        
+        if (!previousSplits.Contains(Split.PreY))
+        {
+            var (positive, negative) = target.SplitAlongAxis(Split.PreY, intersector.y.min);
+            CheckSquare(ref boxes, positive, intersector, new List<Split>(previousSplits) { Split.PreY });
+            CheckSquare(ref boxes, negative, intersector, new List<Split>(previousSplits) { Split.PreY });
+            return;
+        }
+
+        if (!previousSplits.Contains(Split.PostY))
+        {
+            var (positive, negative) = target.SplitAlongAxis(Split.PostY, intersector.y.max);
+            CheckSquare(ref boxes, positive, intersector, new List<Split>(previousSplits) { Split.PostY });
+            CheckSquare(ref boxes, negative, intersector, new List<Split>(previousSplits) { Split.PostY });
+            return;
+        }
+        
+        if (!previousSplits.Contains(Split.PreZ))
+        {
+            var (positive, negative) = target.SplitAlongAxis(Split.PreZ, intersector.z.min);
+            CheckSquare(ref boxes, positive, intersector, new List<Split>(previousSplits) { Split.PreZ });
+            CheckSquare(ref boxes, negative, intersector, new List<Split>(previousSplits) { Split.PreZ });
+            return;
+        }
+
+        if (!previousSplits.Contains(Split.PostZ))
+        {   
+            var (positive, negative) = target.SplitAlongAxis(Split.PostZ, intersector.z.max);
+            CheckSquare(ref boxes, positive, intersector, new List<Split>(previousSplits) { Split.PostZ });
+            CheckSquare(ref boxes, negative, intersector, new List<Split>(previousSplits) { Split.PostZ });
+            return;
+        }
+        
+    }
+
+    void CheckSquare(ref List<Box> boxes, Box target, Box intersector, List<Split> previousSplits)
+    {
+        if (target == null)
+        {
+            return;
+        }
+        
+        if (!target.IsInside(intersector))
+        {
+            if (Intersects(target, intersector))
+            {
+                SplitRecursively(ref boxes, target, intersector, previousSplits);
+            }
+            else
+            {
+                boxes.Add(target);
+            }
         }
     }
 
-    static Box GetOverlappingBox(Box a, Box b)
+    bool Intersects(Box a, Box b)
     {
-        return new Box(!b.state, new Range(Math.Max(a.x.lo, b.x.lo), Math.Min(a.x.hi, b.x.hi)), 
-                                 new Range(Math.Max(a.y.lo, b.y.lo), Math.Min(a.y.hi, b.y.hi)),
-                                 new Range(Math.Max(a.z.lo, b.z.lo), Math.Min(a.z.hi, b.z.hi)));
+        return (CheckRange(a.x, b.x) || CheckRange(b.x, a.x)) &&
+               (CheckRange(a.y, b.y) || CheckRange(b.y, a.y)) &&
+               (CheckRange(a.z, b.z) || CheckRange(b.z, a.z));
     }
+
+    bool CheckRange(Range a, Range b)
+    {
+        return a.min >= b.min && a.min <= b.max;
+    }
+
+    record Range(long min, long max);
+
+    record Instruction(bool command, Box box);
+
+    enum Split
+    {
+        PreX,
+        PostX,
+        PreY,
+        PostY,
+        PreZ,
+        PostZ
+    }
+
+    record Box
+    {
+        public Range x;
+        public Range y;
+        public Range z;
+        
+        public Box(Range x, Range y, Range z)
+        {
+            this.x = new Range(Math.Min(x.min, x.max), Math.Max(x.min, x.max));
+            this.y = new Range(Math.Min(y.min, y.max), Math.Max(y.min, y.max));
+            this.z = new Range(Math.Min(z.min, z.max), Math.Max(z.min, z.max));
+        }
+        
+        public long Size => (Math.Abs(x.max - x.min + 1L) * Math.Abs(y.max - y.min + 1) * Math.Abs(z.max - z.min + 1));
+
+        public bool IsInside(Box target)
+        {
+            return x.min >= target.x.min && x.max <= target.x.max &&
+                   y.min >= target.y.min && y.max <= target.y.max &&
+                   z.min >= target.z.min && z.max <= target.z.max;
+        }
+
+        public (Box positive, Box negative) SplitAlongAxis(Split split, long position)
+        {
+            Box negative, positive;
+            Range n, p;
+            
+            switch (split)
+            {
+                case Split.PreX:
+                    if (position <= x.min || position > x.max)
+                        return (null, this);
+                    (n, p) = BreakNegative(x, position);
+                    negative = new Box(n, y, z);
+                    positive = new Box(p, y, z);
+                    return (negative, positive);
+                case Split.PostX:
+                    if (position < x.min || position >= x.max)
+                        return (this, null);
+
+                    (n, p) = BreakPositive(x, position);
+                    negative = new Box(n, y, z);
+                    positive = new Box(p, y, z);
+                    return (negative, positive);
+                case Split.PreY:
+                    if (position <= y.min || position > y.max)
+                        return (null, this);
+
+                    (n, p) = BreakNegative(y, position);
+                    negative = new Box(x, n, z);
+                    positive = new Box(x, p, z);
+                    return (negative, positive);
+                case Split.PostY:
+                    if (position < y.min || position >= y.max)
+                        return (this, null);
+
+                    (n, p) = BreakPositive(y, position);
+                    negative = new Box(x, n, z);
+                    positive = new Box(x, p, z);
+                    return (negative, positive);
+                case Split.PreZ:
+                    if (position <= z.min || position > z.max)
+                        return (null, this);
+
+                    (n, p) = BreakNegative(z, position);
+                    negative = new Box(x, y, n);
+                    positive = new Box(x, y, p);
+                    return (negative, positive);
+                case Split.PostZ:
+                    if (position < z.min || position >= z.max)
+                        return (this, null);
+
+                    (n, p) = BreakPositive(z, position);
+                    negative = new Box(x, y, n);
+                    positive = new Box(x, y, p);
+                    return (negative, positive);
+            }
+
+            return (null, null);
+        }
+        
+        (Range negative, Range positive) BreakNegative(Range target, long position)
+        {
+            return (new Range(target.min, position - 1), new Range(position, target.max));
+        }
+        
+        (Range negative, Range positive) BreakPositive(Range target, long position)
+        {
+            return (new Range(target.min, position), new Range(position + 1, target.max));
+        }
+        
+        public override string ToString()
+        {
+            return $"{x.min},{x.max} | {y.min},{y.max} | {z.min},{z.max}";
+        }
+    }
+
+
 
     void ParseData(string[] data)
     {
-        instructions = new List<Box>();
+        instructions = new List<Instruction>();
         foreach (var line in data)
         {
             var tokens = line.Split(' ');
@@ -80,7 +265,7 @@ public class Day22 : IChallenge
             var yRange = new Range(int.Parse(yRangeTokens[0]), int.Parse(yRangeTokens[1]));
             var zRange = new Range(int.Parse(zRangeTokens[0]), int.Parse(zRangeTokens[1]));
 
-            instructions.Add(new Box(command, xRange, yRange, zRange));
+            instructions.Add(new Instruction(command, new Box(xRange, yRange, zRange)));
         }
     }
 }
