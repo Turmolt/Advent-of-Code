@@ -10,7 +10,7 @@ public static class Program
 {
     static void Main(string[] args)
     {
-        var useTestData = true;
+        var useTestData = false;
         
         var data = System.IO.File.ReadAllLines(useTestData ? "testdata.txt" : "data.txt");
         var watch = new System.Diagnostics.Stopwatch();
