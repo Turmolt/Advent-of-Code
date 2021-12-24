@@ -14,27 +14,28 @@ public class Day22 : IChallenge
 
         int executed = 0;
 
+        var p1Boxes = new List<Box>();
         var boxes = new List<Box>();
+
+        var p1Clamp = new Box(new Range(-50, 50), new Range(-50, 50), new Range(-50, 50));
 
         foreach (var instruction in instructions)
         {
-            ExecuteInstruction(ref boxes, instruction, false);
+            ExecuteInstruction(ref p1Boxes, instruction, p1Clamp);
+            ExecuteInstruction(ref boxes, instruction);
             executed++;
             Log($"{executed}/{instructions.Count} complete");
         }
 
+        var p1Sum = p1Boxes.Sum(b => b.Size);
         var sum = boxes.Sum(b => b.Size);
+        Log($"Part 1 Answer: {p1Sum}",force:true);
         Log($"Part 2 Answer: {sum}",force:true);
     }
     
-    void ExecuteInstruction(ref List<Box> boxes, Instruction instruction, bool clamp = false)
+    void ExecuteInstruction(ref List<Box> boxes, Instruction instruction, Box clamp = null)
     {
-        //clamp for p1
-        if (clamp)
-        {
-            var initBox = new Box(new Range(-50, 50), new Range(-50, 50), new Range(-50, 50));
-            if (!Intersects(instruction.box, initBox)) return;
-        }
+        if (clamp != null &&!Intersects(instruction.box, clamp)) return;
 
         var boxesAfterInstruction = new List<Box>();
         foreach (var box in boxes)
@@ -77,22 +78,35 @@ public class Day22 : IChallenge
     {
         var ranges = new List<Range>();
         Range range = null;
-        
+
         if (a.min < b.min)
         {
             range = new Range(a.min, b.min - 1);
             ranges.Add(range);
         }
-        else
+        else if(b.min < a.min)
         {
             range = new Range(b.min, a.min-1);
+            ranges.Add(range);
         }
+        else
+        {
+            range = new Range(0, a.min - 1);
+        }
+        
         
         if (a.max > b.max)
         {
             range = new Range(range.max + 1, b.max);
             ranges.Add(range);
             range = new Range(b.max + 1, a.max);
+            ranges.Add(range);
+        }
+        else if(b.max > a.max)
+        {
+            range = new Range(range.max + 1, a.max);
+            ranges.Add(range);
+            range = new Range(range.max + 1, b.max);
             ranges.Add(range);
         }
         else
@@ -120,8 +134,19 @@ public class Day22 : IChallenge
 
     record Instruction(bool command, Box box);
 
-    record Box(Range x, Range y, Range z)
+    record Box
     {
+        public Range x;
+        public Range y;
+        public Range z;
+
+        public Box(Range x, Range y, Range z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        
         public long Size => (Math.Abs(x.max - x.min + 1L) * Math.Abs(y.max - y.min + 1) * Math.Abs(z.max - z.min + 1));
 
         public bool IsInside(Box target)
