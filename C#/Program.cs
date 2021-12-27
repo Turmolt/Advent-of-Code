@@ -15,7 +15,7 @@ public static class Program
         var data = System.IO.File.ReadAllLines(useTestData ? "testdata.txt" : "data.txt");
         var watch = new System.Diagnostics.Stopwatch();
             
-        IChallenge d = new Day22();
+        IChallenge d = new Day25();
   
         watch.Start();
         d.Solve(data);
